@@ -1,0 +1,116 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'thor'
+require 'pathname'
+
+class Setup < Thor
+  include Thor::Actions
+
+  GEM_SPEC_APP_NAME = 'dummy'
+  GEM_SPEC_APP_ROOT = 'spec/dummy'
+
+  def self.exit_on_failure?
+    true
+  end
+
+  def self.source_root
+    File.join(__dir__, 'sources')
+  end
+
+  desc 'app', 'Initialize a new Rails app'
+
+  def app
+    editorconfig
+    rubocop
+    rspec
+    environment
+    instructions
+  end
+
+  desc 'gem', 'Initialize a new Rails gem'
+
+  def gem
+    @gem = true
+    app
+  end
+
+  private
+
+  def gem?
+    @gem
+  end
+
+  def editorconfig
+    copy_file 'editorconfig', '.editorconfig'
+  end
+
+  def rubocop
+    copy_file 'rubocop.yml', '.rubocop.yml'
+  end
+
+  def app_root
+    @app_root ||= Pathname(gem? ? GEM_SPEC_APP_ROOT : '')
+  end
+
+  def app_config
+    @app_config ||= app_root.join('config')
+  end
+
+  def app_environments
+    @app_environments ||= app_config.join('environments')
+  end
+
+  def environment
+    directory 'config', app_config
+  end
+
+  def rspec
+    copy_file 'rspec', '.rspec'
+    empty_directory 'spec/factories'
+    empty_directory 'spec/support'
+    empty_directory 'spec/models'
+    empty_directory 'spec/requests'
+    copy_file 'spec/spec_helper.rb'
+
+    # Override rails_helper and make sure it loads the Rails environment for the app
+    # or the gem's spec dummy app
+    copy_file 'spec/rails_helper.rb' do |content|
+      content.sub '../config/environment', "../#{app_config}/environment"
+    end
+
+    create_spec_app if gem?
+  end
+
+  ##
+  # Create a dummy Rails app for testing
+  def create_spec_app
+    in_root do
+      unless Dir.exist?(GEM_SPEC_APP_ROOT)
+        inside('spec') do
+          run 'rails new --api -G --skip-docker -M --skip-active-job --skip-bootsnap -C -A -J -T -B dummy'
+        end
+        %w[development test production].each do |environment|
+          remove_file app_environments.join("#{environment}.rb")
+        end
+      end
+    end
+  end
+
+  def instructions
+    puts <<~DOC
+
+      ## Fixing/linting with Rubocop
+
+      ### RubyMine: Run Rubocop autocorrect on save
+
+      1. Go to File > Settings > Editor > Inspections
+      1. Search for 'Rubocop'
+      1. Check the box next to "Run 'rubocop -a' on save"
+
+      ref: https://www.jetbrains.com/help/ruby/rubocop.html
+
+    DOC
+  end
+end
+
+Setup.start

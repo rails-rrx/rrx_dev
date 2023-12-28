@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
-require_relative "rrx_dev/version"
+require_relative 'rrx_dev/version'
 
-module RRXDev
+module RrxDev
   class Error < StandardError; end
-  # Your code goes here...
 end

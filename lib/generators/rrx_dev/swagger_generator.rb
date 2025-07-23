@@ -1,7 +1,7 @@
-require_relative 'base'
-
 module RrxDev
-  class SwaggerGenerator < Base
+  class SwaggerGenerator < Rails::Generators::Base
+    source_root File.expand_path('templates', __dir__)
+
     def generate!
       copy_new_file 'spec/swagger_helper.rb'
       copy_new_file 'config/initializers/api_docs.rb'

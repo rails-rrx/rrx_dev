@@ -4,22 +4,29 @@ Opinionated core development dependencies and configuration for Ruby on Rails pr
 
 ## Installation
 
-Install the gem and add to the application's Gemfile by executing:
-
-    $ bundle add rrx_dev
-
-If bundler is not being used to manage dependencies, install the gem by executing:
-
-    $ gem install rrx_dev
-
-After installation, instrument your project by running `rrx_dev_setup`
+To create a new app or gem, use the `rrx_rails` command.
 
 ```shell
-# For Rails apps
-rrx_dev_setup app
+gem install rrx_rails
+rrx_rails help
+```
 
-# For Rails gems
-rrx_dev_setup gem
+To add `rrx_dev` to an existing Ruby on Rails application or gem:
+
+```shell
+bundle add rrx_dev --group "development, test"
+```
+
+Then run the generator to set up the project:
+
+```shell
+bundle exec rails g rrx_dev:install
+```
+
+If you intend to use Swagger for API documentation, you can also run:
+
+```shell
+bundle exec rails g rrx_dev:swagger
 ```
 
 ## Usage

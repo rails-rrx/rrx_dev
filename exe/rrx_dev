@@ -1,24 +1,25 @@
 #!/usr/bin/env ruby
-require 'rubygems'
-require 'thor'
+require 'bundler/setup'
 require 'pathname'
+require 'thor'
 
 class Setup < Thor
   include Thor::Actions
 
-  GEM_SPEC_APP_NAME = 'dummy'
-  GEM_SPEC_APP_ROOT = 'spec/dummy'
+  GEM_SPEC_APP_NAME = 'dummy'.freeze
+  GEM_SPEC_APP_ROOT = 'spec/dummy'.freeze
+
+  add_runtime_options!
 
   def self.exit_on_failure?
     true
   end
 
   def self.source_root
-    File.join(__dir__, 'sources')
+    @source_root = Pathname(__FILE__).parent.join('sources').to_s
   end
 
   desc 'app', 'Initialize a new Rails app'
-
   def app
     editorconfig
     rubocop
@@ -28,7 +29,6 @@ class Setup < Thor
   end
 
   desc 'gem', 'Initialize a new Rails gem'
-
   def gem
     @gem = true
     app
@@ -38,6 +38,14 @@ class Setup < Thor
 
   def gem?
     @gem
+  end
+
+  def quiet?
+    options[:quiet]
+  end
+
+  def force?
+    options[:force]
   end
 
   def editorconfig

@@ -32,18 +32,19 @@ Gem::Specification.new do |spec|
 
     To complete project setup, please run:
 
-      bundle exec rrx_dev_init
+      bundle exec rails g rrx_dev:install
 
   DOC
 
-  spec.bindir = 'exe'
-  spec.executables = %w[rrx_dev_setup]
+  # spec.bindir = 'exe'
+  # spec.executables = %w[rrx_dev]
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'activesupport', RrxDev::RAILS_VERSION
   spec.add_dependency 'active_record_query_trace'
+  spec.add_dependency 'activesupport', RrxDev::RAILS_VERSION
   spec.add_dependency 'bootsnap'
   spec.add_dependency 'debug'
+  spec.add_dependency 'factory_bot'
   spec.add_dependency 'factory_bot_rails'
   spec.add_dependency 'listen'
   spec.add_dependency 'railties', RrxDev::RAILS_VERSION
@@ -56,4 +57,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'rubocop-rails'
   spec.add_dependency 'spring'
   spec.add_dependency 'thor'
+
+  spec.add_development_dependency 'generator_spec'
 end

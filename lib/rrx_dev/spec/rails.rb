@@ -27,7 +27,9 @@ def init_rrx_spec_rails!
     end
   end
 
-  Dir[Rails.root.join('spec/support/**/*.rb')].sort.each { |f| require f }
+  # Use spec_dir (the caller's spec/ directory) instead of Rails.root,
+  # because Rails.root resolves to spec/dummy which is inside spec/.
+  Dir[spec_dir.join('support/**/*.rb')].sort.each { |f| require f }
 end
 
 init_rrx_spec_rails!

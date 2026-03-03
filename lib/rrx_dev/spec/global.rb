@@ -1,5 +1,7 @@
 require 'active_support/testing/assertions'
 require 'rspec/parameterized'
+require_relative 'matchers'
+require_relative 'auth_helpers'
 
 module Global
   def self.included(other)
